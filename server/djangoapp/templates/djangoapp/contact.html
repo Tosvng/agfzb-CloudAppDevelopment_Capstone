@@ -47,58 +47,20 @@
               >Contact us</a
             >
           </li>
-          {% if user.is_authenticated %}
-          <div class="rightalign">
-            <div class="dropdown">
-              <button class="dropbtn">
-                {{user.first_name}}({{user.username}})
-              </button>
-              <div class="dropdown-content">
-                <a href="{% url 'djangoapp:logout' %}">Logout</a>
-              </div>
-            </div>
-          </div>
-
-          {% else %}
-          <li>
-            <form
-              class="form-inline"
-              action="{% url 'djangoapp:login' %}"
-              method="post"
-            >
-              {% csrf_token %}
-              <div class="input-group">
-                <input
-                  type="text"
-                  class="form-control"
-                  placeholder="Username"
-                  name="username"
-                  required
-                />
-                <input
-                  type="password"
-                  class="form-control"
-                  placeholder="password"
-                  name="pwd"
-                  required
-                />
-                <button class="btn btn-primary" type="submit">Login</button>
-                <a
-                  class="btn btn-link"
-                  href="{% url 'djangoapp:registration' %}"
-                  >Sign up</a
-                >
-              </div>
-            </form>
-          </li>
-          {% endif %}
         </ul>
       </div>
     </nav>
     <!--Add a nav bar here -->
 
-    <div class="container"></div>
-
-    <!--Add a dealer table here -->
+    <!--About info here -->
+    <div class="container">
+      <h1>
+        We are located at:
+        <br />
+        <p>50 Southpark Dr</p>
+        <p>Winnipeg, MB</p>
+        <p>Our phone number is: 204-869-8448</p>
+      </h1>
+    </div>
   </body>
 </html>

@@ -1,11 +1,11 @@
-  applications:
-  - name: djangoapp
+applications:
+  - name: dealershipreviewer
     routes:
-      - route: $HOST.$DOMAIN
+      - route: dreviewer-97b.us-south.cf.appdomain.cloud
     memory: 128M
     buildpack: python_buildpack
-  - name: djangoapp-nginx
+  - name: dealershipreviewer-nginx
     routes:
-      - route: $HOST.$DOMAIN/static
+      - route: dreviewer-97b.us-south.cf.appdomain.cloud/static
     memory: 128M
     buildpack: staticfile_buildpack
