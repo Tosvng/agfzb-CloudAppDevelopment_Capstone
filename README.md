@@ -22,6 +22,7 @@ You must complete all the labs to successfully complete the project.
 2. Set up continuous integration and delivery
 
 **Implement backend services**
+Used ibm cloudant service to store dealership and reviews data
 1. Create cloud functions to manage dealers and reviews
 2. Create Django models and views to manage car model and car make
 3. Create Django proxy services and views to integrate dealers, reviews, and cars together
