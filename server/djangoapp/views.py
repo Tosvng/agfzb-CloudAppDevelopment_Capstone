@@ -10,6 +10,10 @@ from datetime import datetime
 import logging
 import json
 
+from .models import CarModel
+
+from .restapis import get_dealer_by_id, get_dealer_reviews_from_cf, get_dealers_from_cf, post_request
+
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
 
@@ -89,10 +93,24 @@ def registration_request(request):
 
 
 # Update the `get_dealerships` view to render the index page with a list of dealerships
+# def get_dealerships(request):
+#     context = {}
+#     if request.method == "GET":
+#         return render(request, 'djangoapp/index.html', context)
 def get_dealerships(request):
-    context = {}
     if request.method == "GET":
+        context = {}
+        url = "https://us-south.functions.appdomain.cloud/api/v1/web/Tosvng_Tosvng-space/dealership-package/dealership.json"
+        # Get dealers from the URL
+        dealerships = get_dealers_from_cf(url)
+        context["dealerships"] = dealerships
+        # Concat all dealer's short name
+        # dealer_names = ' '.join([dealer.short_name for dealer in dealerships])
+        # Return a list of dealer short name
         return render(request, 'djangoapp/index.html', context)
+
+
+
 def about(request):
     context = {}
     if request.method == "GET":
@@ -106,8 +124,64 @@ def contact(request):
 # Create a `get_dealer_details` view to render the reviews of a dealer
 # def get_dealer_details(request, dealer_id):
 # ...
+def get_dealer_details(request, dealer_id):
+    context = {}
+    if request.method == "GET":
+        url = "https://us-south.functions.appdomain.cloud/api/v1/web/Tosvng_Tosvng-space/dealership-package/reviews.json"
+        reviews = get_dealer_reviews_from_cf(url, dealer_id=dealer_id)
+        context = {
+            "reviews":  reviews, 
+            "dealer_id": dealer_id
+        }
 
+        return render(request, 'djangoapp/dealer_details.html', context)
 # Create a `add_review` view to submit a review
 # def add_review(request, dealer_id):
 # ...
+def add_review(request, dealer_id):
+    
+    if request.user.is_authenticated:
+         # GET request renders the page with the form for filling out a review
+        if request.method == "GET":
+            url = f"https://us-south.functions.appdomain.cloud/api/v1/web/Tosvng_Tosvng-space/dealership-package/dealership.json?dealerId={dealer_id}"
+            # Get dealer details from the API
+            print(CarModel.objects.all())
+            context = {
+                "cars": CarModel.objects.all(),
+                "dealer": get_dealer_by_id(url, dealer_id=dealer_id)[0],
+            }
+            return render(request, 'djangoapp/add_review.html', context)
+        if request.method == 'POST':
+            form = request.POST
+            review = dict()
+            review["time"] = datetime.utcnow().isoformat()
+            review["dealership"] = dealer_id
+            review["review"] = form["content"]
+            review["purchase"] = form.get("purchasecheck")
+            if review["purchase"]:
+                review["purchase_date"] = datetime.strptime(form.get("purchasedate"), "%m/%d/%Y").isoformat()
+            car = CarModel.objects.get(pk=form["car"])
+            review["car_make"] = car.car_make.name
+            review["car_model"] = car.name
+            review["car_year"] = car.year
+             # If the user bought the car, get the purchase date
+            if form.get("purchasecheck"):
+                review["purchase_date"] = datetime.strptime(form.get("purchasedate"), "%m/%d/%Y").isoformat()
+            else: 
+                review["purchase_date"] = None
 
+            json_payload =dict()
+            json_payload["review"] = review
+
+             # Performing a POST request with the review
+            url = "https://us-south.functions.appdomain.cloud/api/v1/web/Tosvng_Tosvng-space/dealership-package/post-review"  # API Cloud Function route
+            result = post_request(url, json_payload, dealerId=dealer_id)
+            if int(result.status_code) == 200:
+                print("Review posted successfully.")
+
+            # After posting the review the user is redirected back to the dealer details page
+            return redirect("djangoapp:dealer_details", dealer_id=dealer_id)
+    else:
+        # If user isn't logged in, redirect to login page
+        print("User must be authenticated before posting a review. Please log in.")
+        return redirect("/djangoapp/login")
