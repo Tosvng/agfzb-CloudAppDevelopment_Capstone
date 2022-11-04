@@ -19,44 +19,79 @@
     <script src="https://unpkg.com/bootstrap-table@1.18.2/dist/bootstrap-table.min.js"></script>
     <script src="https://unpkg.com/bootstrap-table@1.18.2/dist/extensions/filter-control/bootstrap-table-filter-control.min.js"></script>
   </head>
-  <body>
+  <body class="vh-100">
     <!--Add a registration form here -->
-    <div class="container">
-      <h1>Sign up</h1>
-      <hr />
-      <form action="{% url 'djangoapp:registration' %}" method="post">
-        <label for="username"><b>User Name</b></label>
-        <input
-          type="text"
-          placeholder="Enter user name"
-          name="username"
-          required
-        />
-        <label for="firstname"><b>First Name</b></label>
-        <input
-          type="text"
-          placeholder="Enter first name"
-          name="firstname"
-          required
-        />
-        <label for="lastname"><b>Last Name</b></label>
-        <input
-          type="text"
-          placeholder="Enter last name"
-          name="lastname"
-          required
-        />
-        <label for="psw"><b>Password</b></label>
-        <input
-          type="password"
-          placeholder="Enter password"
-          name="psw"
-          required
-        />
+    <div class="container h-100">
+      <div class="row d-flex justify-content-center align-items-center h-100">
+        <div class="col-lg-12 col-xl-11">
+          <div class="card text-black" style="border-radius: 25px">
+            <div class="card-body p-md-5">
+              <div class="row justify-content-center">
+                <div class="col-md-10 col-lg-6 col-xl-5 order-2 order-lg-1">
+                  <h1 class="text-center h1 fw-bold mb-5 mx-1 mx-md-4 mt-4">
+                    Sign up
+                  </h1>
+                  <hr />
+                  <form
+                    class="mx-1 mx-md-4"
+                    action="{% url 'djangoapp:registration' %}"
+                    method="post"
+                  >
+                    <div class="d-flex flex-row align-items-center mb-4">
+                      <label for="username"><b>User Name</b></label>
+                      <input
+                        type="text"
+                        placeholder="Enter user name"
+                        name="username"
+                        required
+                      />
+                    </div>
 
-        {% csrf_token %}
-        <button class="button" type="submit">Sign Up</button>
-      </form>
+                    <div class="class="d-flex flex-row align-items-center mb-4"">
+
+                      <label for="firstname"><b>First Name</b></label>
+                      <input
+                        type="text"
+                        placeholder="Enter first name"
+                        name="firstname"
+                        required
+                      />
+                    </div>
+
+                    <div class="d-flex flex-row align-items-center mb-4">
+                      <label for="lastname"><b>Last Name</b></label>
+                      <input
+                        type="text"
+                        placeholder="Enter last name"
+                        name="lastname"
+                        required
+                      />
+
+                    </div>
+
+                    <div class="d-flex flex-row align-items-center mb-4">
+
+                      <label for="psw"><b>Password</b></label>
+                      <input
+                        type="password"
+                        placeholder="Enter password"
+                        name="psw"
+                        required
+                      />
+                    </div>
+
+                    {% csrf_token %}
+                    <div class="d-flex justify-content-center mx-4 mb-3 mb-lg-4">
+                      <button class="button" type="submit">Sign Up</button>
+
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </body>
 </html>
